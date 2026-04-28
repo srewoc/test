@@ -1,0 +1,672 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>不尬开场器</title>
+  <style>
+    :root {
+      --bg: #f7f4ee;
+      --panel: #fffdf8;
+      --panel-strong: #ffffff;
+      --ink: #26231f;
+      --muted: #756f66;
+      --soft: #e9dfcf;
+      --line: #ded3c2;
+      --accent: #b86f3c;
+      --accent-dark: #8c4f2a;
+      --accent-soft: #f5e1d0;
+      --green: #557a5b;
+      --green-soft: #e5efe5;
+      --warning: #9b6741;
+      --shadow: 0 22px 70px rgba(91, 64, 39, 0.12);
+      --radius: 8px;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      color: var(--ink);
+      background:
+        linear-gradient(135deg, rgba(255, 253, 248, 0.85), rgba(247, 244, 238, 0.96)),
+        repeating-linear-gradient(90deg, rgba(184, 111, 60, 0.04) 0 1px, transparent 1px 76px);
+      font-family: "Noto Serif SC", "Songti SC", "STSong", Georgia, serif;
+      line-height: 1.6;
+    }
+
+    button,
+    input,
+    textarea {
+      font: inherit;
+    }
+
+    .page {
+      width: min(1180px, calc(100% - 32px));
+      margin: 0 auto;
+      padding: 44px 0 32px;
+    }
+
+    .hero {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) auto;
+      align-items: end;
+      gap: 24px;
+      margin-bottom: 26px;
+    }
+
+    .eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      margin: 0 0 12px;
+      color: var(--accent-dark);
+      font-size: 13px;
+      font-weight: 700;
+      letter-spacing: 0;
+    }
+
+    .eyebrow::before {
+      content: "";
+      width: 22px;
+      height: 1px;
+      background: var(--accent);
+    }
+
+    h1 {
+      margin: 0;
+      font-size: clamp(34px, 5vw, 58px);
+      line-height: 1.08;
+      letter-spacing: 0;
+    }
+
+    .subtitle {
+      max-width: 620px;
+      margin: 14px 0 0;
+      color: var(--muted);
+      font-size: 17px;
+    }
+
+    .hero-note {
+      max-width: 310px;
+      padding: 14px 16px;
+      color: var(--muted);
+      background: rgba(255, 253, 248, 0.72);
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      font-size: 14px;
+    }
+
+    .workspace {
+      display: grid;
+      grid-template-columns: minmax(330px, 0.88fr) minmax(0, 1.12fr);
+      gap: 20px;
+      align-items: start;
+    }
+
+    .panel {
+      background: rgba(255, 253, 248, 0.9);
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      overflow: hidden;
+    }
+
+    .panel-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      padding: 18px 20px 14px;
+      border-bottom: 1px solid var(--line);
+      background: rgba(255, 255, 255, 0.48);
+    }
+
+    .panel-title {
+      margin: 0;
+      font-size: 18px;
+      line-height: 1.25;
+    }
+
+    .badge {
+      flex: 0 0 auto;
+      padding: 4px 9px;
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      color: var(--accent-dark);
+      background: var(--accent-soft);
+      font-size: 12px;
+      font-weight: 700;
+      white-space: nowrap;
+    }
+
+    form {
+      padding: 20px;
+    }
+
+    .field {
+      display: grid;
+      gap: 8px;
+      margin-bottom: 16px;
+    }
+
+    label {
+      font-size: 14px;
+      font-weight: 700;
+    }
+
+    input,
+    textarea {
+      width: 100%;
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      padding: 11px 12px;
+      color: var(--ink);
+      background: var(--panel-strong);
+      outline: none;
+      transition: border-color 160ms ease, box-shadow 160ms ease, background 160ms ease;
+    }
+
+    textarea {
+      min-height: 82px;
+      resize: vertical;
+    }
+
+    input:focus,
+    textarea:focus {
+      border-color: rgba(184, 111, 60, 0.72);
+      box-shadow: 0 0 0 4px rgba(184, 111, 60, 0.12);
+      background: #fffefa;
+    }
+
+    .primary-action {
+      width: 100%;
+      min-height: 48px;
+      border: 0;
+      border-radius: var(--radius);
+      color: #fffaf3;
+      background: linear-gradient(180deg, var(--accent), var(--accent-dark));
+      cursor: pointer;
+      font-weight: 800;
+      box-shadow: 0 14px 28px rgba(140, 79, 42, 0.22);
+      transition: transform 160ms ease, box-shadow 160ms ease;
+    }
+
+    .primary-action:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 18px 34px rgba(140, 79, 42, 0.26);
+    }
+
+    .primary-action:active {
+      transform: translateY(0);
+    }
+
+    .output {
+      display: grid;
+      gap: 16px;
+    }
+
+    .empty-state {
+      padding: 34px 28px;
+      color: var(--muted);
+      background: rgba(255, 253, 248, 0.9);
+      border: 1px dashed var(--line);
+      border-radius: var(--radius);
+      text-align: center;
+    }
+
+    .result-card {
+      padding: 20px;
+      background: rgba(255, 253, 248, 0.95);
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      box-shadow: 0 14px 44px rgba(91, 64, 39, 0.08);
+    }
+
+    .result-card h2 {
+      margin: 0 0 12px;
+      font-size: 18px;
+      line-height: 1.25;
+    }
+
+    .opening-line {
+      margin: 0;
+      padding: 18px;
+      border-left: 4px solid var(--accent);
+      border-radius: var(--radius);
+      background: #fff9f0;
+      font-size: 18px;
+      line-height: 1.75;
+    }
+
+    .plain-text {
+      margin: 0;
+      color: var(--muted);
+    }
+
+    .topic-grid,
+    .check-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 10px;
+    }
+
+    .topic,
+    .check-item {
+      min-height: 92px;
+      padding: 13px;
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      background: var(--panel-strong);
+    }
+
+    .topic strong,
+    .check-item strong {
+      display: block;
+      margin-bottom: 5px;
+      font-size: 14px;
+    }
+
+    .topic span,
+    .check-item span {
+      display: block;
+      color: var(--muted);
+      font-size: 14px;
+    }
+
+    .rounds {
+      display: grid;
+      gap: 12px;
+    }
+
+    .round {
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      background: var(--panel-strong);
+      overflow: hidden;
+    }
+
+    .round-title {
+      margin: 0;
+      padding: 12px 14px;
+      background: #f7efe4;
+      color: var(--accent-dark);
+      font-size: 15px;
+    }
+
+    .round-body {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 0;
+    }
+
+    .cell {
+      padding: 13px 14px;
+      border-top: 1px solid var(--line);
+    }
+
+    .cell:nth-child(odd) {
+      border-right: 1px solid var(--line);
+    }
+
+    .cell-label {
+      display: block;
+      margin-bottom: 5px;
+      color: var(--muted);
+      font-size: 12px;
+      font-weight: 800;
+    }
+
+    .cell-text {
+      margin: 0;
+      font-size: 14px;
+    }
+
+    .check-grid {
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+    }
+
+    .check-item {
+      min-height: 116px;
+      background: var(--green-soft);
+      border-color: rgba(85, 122, 91, 0.26);
+    }
+
+    .check-status {
+      display: inline-flex;
+      align-items: center;
+      margin-bottom: 8px;
+      padding: 3px 8px;
+      border-radius: 999px;
+      color: #fff;
+      background: var(--green);
+      font-size: 12px;
+      font-weight: 800;
+    }
+
+    .footer {
+      margin-top: 22px;
+      padding: 18px 20px;
+      background: rgba(255, 253, 248, 0.82);
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      color: var(--muted);
+    }
+
+    .footer h2 {
+      margin: 0 0 10px;
+      color: var(--ink);
+      font-size: 16px;
+    }
+
+    .footer-list {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin: 0;
+      padding: 0;
+      list-style: none;
+    }
+
+    .footer-list li {
+      padding: 7px 10px;
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      background: #fffdf8;
+      font-size: 14px;
+    }
+
+    @media (max-width: 860px) {
+      .page {
+        width: min(100% - 24px, 680px);
+        padding-top: 28px;
+      }
+
+      .hero,
+      .workspace {
+        grid-template-columns: 1fr;
+      }
+
+      .hero-note {
+        max-width: none;
+      }
+
+      .topic-grid,
+      .check-grid,
+      .round-body {
+        grid-template-columns: 1fr;
+      }
+
+      .cell:nth-child(odd) {
+        border-right: 0;
+      }
+    }
+  </style>
+</head>
+<body>
+  <main class="page">
+    <header class="hero">
+      <div>
+        <p class="eyebrow">AI 破冰话题生成器</p>
+        <h1>不尬开场器</h1>
+        <p class="subtitle">输入双方零散信息，生成一句自然开场白和三轮接话建议</p>
+      </div>
+      <aside class="hero-note">
+        为“小 A 已经有一个想聊天的人，但不知道怎么自然开口”这个场景设计。
+      </aside>
+    </header>
+
+    <section class="workspace" aria-label="不尬开场器工作台">
+      <section class="panel" aria-labelledby="form-title">
+        <div class="panel-header">
+          <h2 class="panel-title" id="form-title">输入零散信息</h2>
+          <span class="badge">Demo 表单</span>
+        </div>
+        <form id="icebreaker-form">
+          <div class="field">
+            <label for="relation">对方是谁</label>
+            <input id="relation" name="relation" value="朋友介绍的人" autocomplete="off">
+          </div>
+
+          <div class="field">
+            <label for="their-info">对方零散信息</label>
+            <textarea id="their-info" name="their-info">最近在看《繁花》、喜欢咖啡、吐槽通勤累</textarea>
+          </div>
+
+          <div class="field">
+            <label for="my-info">我的相关信息</label>
+            <textarea id="my-info" name="my-info">也喜欢看剧、周末常去咖啡店、不太懂咖啡但喜欢咖啡店氛围</textarea>
+          </div>
+
+          <div class="field">
+            <label for="avoid">我不想显得</label>
+            <input id="avoid" name="avoid" value="油腻、查户口、太急、太装熟" autocomplete="off">
+          </div>
+
+          <div class="field">
+            <label for="tone">想要的语气</label>
+            <input id="tone" name="tone" value="轻松、自然、慢热、有一点幽默" autocomplete="off">
+          </div>
+
+          <button class="primary-action" type="submit">生成不尬开场</button>
+        </form>
+      </section>
+
+      <section class="output" id="output" aria-live="polite">
+        <div class="empty-state">
+          点击按钮后，这里会出现可直接发送的开场白、解释、话题方向和三轮接话建议。
+        </div>
+      </section>
+    </section>
+
+    <footer class="footer">
+      <h2>本版本故意不做</h2>
+      <ul class="footer-list">
+        <li>不做匹配算法</li>
+        <li>不做资料库</li>
+        <li>不做自动代聊</li>
+      </ul>
+    </footer>
+  </main>
+
+  <script>
+    const form = document.querySelector("#icebreaker-form");
+    const output = document.querySelector("#output");
+
+    function getValue(id) {
+      return document.querySelector(id).value.trim();
+    }
+
+    function includesAny(text, words) {
+      return words.some((word) => text.includes(word));
+    }
+
+    function isDefaultScenario(theirInfo, myInfo) {
+      return includesAny(theirInfo, ["繁花", "咖啡", "通勤"])
+        && includesAny(myInfo, ["看剧", "咖啡店", "氛围"]);
+    }
+
+    function splitHints(text) {
+      return text
+        .split(/[、，,；;\n]/)
+        .map((item) => item.trim())
+        .filter(Boolean);
+    }
+
+    function generateDemo(data) {
+      const theirHints = splitHints(data.theirInfo);
+      const myHints = splitHints(data.myInfo);
+      const firstTheirHint = theirHints[0] || "最近的小兴趣";
+      const secondTheirHint = theirHints[1] || "日常偏好";
+      const thirdTheirHint = theirHints[2] || "最近的小吐槽";
+      const firstMyHint = myHints[0] || "我也有一点相关经历";
+      const secondMyHint = myHints[1] || "想自然接一下这个话题";
+
+      if (isDefaultScenario(data.theirInfo, data.myInfo)) {
+        return {
+          opening: "听说你最近也在看《繁花》，我刚好也在补。感觉这剧很适合配咖啡慢慢看，但如果在通勤路上看，可能会更累一点哈哈。",
+          why: "它先接住对方真实近况，再轻轻补充自己的共同点；没有上来夸人、盘问隐私或急着约见面，最后的小幽默也和通勤累有关，不是硬凹段子。",
+          topics: [
+            ["看剧节奏", "从《繁花》切入，聊喜欢慢慢看还是一口气追。"],
+            ["咖啡店氛围", "不装懂咖啡，只聊环境、气味和适合发呆的店。"],
+            ["通勤回血", "顺着通勤累，聊路上会听什么、看什么放松。"]
+          ],
+          rounds: [
+            {
+              title: "第 1 轮",
+              reply: "对方可能说：哈哈我就是通勤路上看的，确实有点累。",
+              judge: "AI 判断：对方接住了幽默，也愿意展开通勤场景。",
+              recommend: "小 A 推荐回复：那你这个观看条件有点硬核。我一般得找个不赶时间的时候看，不然人物关系还没理清，人先被地铁晃迷糊了。",
+              avoid: "不建议说：你每天几点上班？坐几号线？住哪里？"
+            },
+            {
+              title: "第 2 轮",
+              reply: "对方可能说：我主要是喜欢那个年代感和氛围。",
+              judge: "AI 判断：对方给出了偏好，可以继续聊感受，不要马上评价品味。",
+              recommend: "小 A 推荐回复：懂，那种灯光和说话节奏确实很有味道。我还挺喜欢它不急着把事情讲完的感觉，你会更喜欢剧情还是氛围？",
+              avoid: "不建议说：你品味真高级，感觉你一定很特别。"
+            },
+            {
+              title: "第 3 轮",
+              reply: "对方可能说：氛围吧，最好旁边还有杯咖啡。",
+              judge: "AI 判断：已经出现共同兴趣，可以轻轻交换偏好，但不要立刻约。",
+              recommend: "小 A 推荐回复：这个画面成立。我不太懂咖啡豆，但很吃咖啡店氛围。你一般会选安静一点的店，还是人多一点、有生活感的？",
+              avoid: "不建议说：那我们这周末直接去喝咖啡吧。"
+            }
+          ]
+        };
+      }
+
+      return {
+        opening: `听说你最近在关注「${firstTheirHint}」，我刚好也和「${firstMyHint}」有点关系。感觉这个话题挺适合慢慢聊的，不用太正式，我先好奇一下：你是怎么开始注意到它的？`,
+        why: `这句话把重点放在对方已经透露的信息上，同时交代了自己的关联点「${firstMyHint}」。它没有连续提问，也没有急着把关系推进到见面，符合「${data.tone || "自然"}」的语气。`,
+        topics: [
+          [firstTheirHint, "先聊对方已经提到的近况，降低突然开口的陌生感。"],
+          [secondTheirHint, "把话题从事实转到感受，避免像做问卷。"],
+          [thirdTheirHint, "接住轻微吐槽或日常细节，更容易形成真实来回。"]
+        ],
+        rounds: [
+          {
+            title: "第 1 轮",
+            reply: `对方可能说：其实就是最近刚好看到「${firstTheirHint}」。`,
+            judge: "AI 判断：回复偏轻，需要用自己的小经历补一点温度。",
+            recommend: `小 A 推荐回复：这种刚好看到的东西反而容易入坑。我之前也是因为「${firstMyHint}」才开始留意类似话题。`,
+            avoid: "不建议说：你为什么喜欢这个？具体说说。"
+          },
+          {
+            title: "第 2 轮",
+            reply: `对方可能说：主要是觉得「${secondTheirHint}」还挺有意思。`,
+            judge: "AI 判断：对方开始表达偏好，可以顺着感受聊，不要马上评价对方。",
+            recommend: `小 A 推荐回复：这个点我能理解，它不是那种特别用力的有趣。我跟「${secondMyHint}」有关的时候，也会更吃这种自然一点的感觉。`,
+            avoid: "不建议说：感觉你和别人不一样。"
+          },
+          {
+            title: "第 3 轮",
+            reply: `对方可能说：对，而且最近「${thirdTheirHint}」。`,
+            judge: "AI 判断：出现日常场景，可以继续轻松承接，但别急着邀约。",
+            recommend: "小 A 推荐回复：这个就很真实了。感觉很多聊天其实不用一上来聊很大的事，能把这种小日常接住就挺舒服。",
+            avoid: "不建议说：那我们什么时候见面聊？"
+          }
+        ]
+      };
+    }
+
+    function renderResult(result) {
+      output.innerHTML = `
+        <article class="result-card">
+          <h2>一句可直接发的开场白</h2>
+          <p class="opening-line">“${result.opening}”</p>
+        </article>
+
+        <article class="result-card">
+          <h2>为什么这句话不尬</h2>
+          <p class="plain-text">${result.why}</p>
+        </article>
+
+        <article class="result-card">
+          <h2>三个可延展话题方向</h2>
+          <div class="topic-grid">
+            ${result.topics.map(([title, desc]) => `
+              <div class="topic">
+                <strong>${title}</strong>
+                <span>${desc}</span>
+              </div>
+            `).join("")}
+          </div>
+        </article>
+
+        <article class="result-card">
+          <h2>三轮接话建议</h2>
+          <div class="rounds">
+            ${result.rounds.map((round) => `
+              <section class="round">
+                <h3 class="round-title">${round.title}</h3>
+                <div class="round-body">
+                  <div class="cell">
+                    <span class="cell-label">对方可能回复</span>
+                    <p class="cell-text">${round.reply}</p>
+                  </div>
+                  <div class="cell">
+                    <span class="cell-label">AI 判断</span>
+                    <p class="cell-text">${round.judge}</p>
+                  </div>
+                  <div class="cell">
+                    <span class="cell-label">小 A 推荐回复</span>
+                    <p class="cell-text">${round.recommend}</p>
+                  </div>
+                  <div class="cell">
+                    <span class="cell-label">不建议说的话</span>
+                    <p class="cell-text">${round.avoid}</p>
+                  </div>
+                </div>
+              </section>
+            `).join("")}
+          </div>
+        </article>
+
+        <article class="result-card">
+          <h2>反油腻检查</h2>
+          <div class="check-grid">
+            <div class="check-item">
+              <span class="check-status">通过</span>
+              <strong>是否过度夸奖</strong>
+              <span>没有使用“你一定很特别”这类泛化夸奖。</span>
+            </div>
+            <div class="check-item">
+              <span class="check-status">通过</span>
+              <strong>是否查户口</strong>
+              <span>不连续追问年龄、住址、工作等隐私信息。</span>
+            </div>
+            <div class="check-item">
+              <span class="check-status">通过</span>
+              <strong>是否太急着约</strong>
+              <span>前三轮先建立自然来回，不直接推进见面。</span>
+            </div>
+            <div class="check-item">
+              <span class="check-status">通过</span>
+              <strong>是否像模板搭讪</strong>
+              <span>内容来自双方具体信息，而不是万能套话。</span>
+            </div>
+          </div>
+        </article>
+      `;
+    }
+
+    form.addEventListener("submit", (event) => {
+      event.preventDefault();
+      const data = {
+        relation: getValue("#relation"),
+        theirInfo: getValue("#their-info"),
+        myInfo: getValue("#my-info"),
+        avoid: getValue("#avoid"),
+        tone: getValue("#tone")
+      };
+
+      renderResult(generateDemo(data));
+    });
+  </script>
+</body>
+</html>
